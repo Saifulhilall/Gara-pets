@@ -19,6 +19,7 @@ class UserController extends Controller
         $users = User::query()
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('username', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             })
             ->when($role, function ($query) use ($role) {
@@ -40,6 +41,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:50', 'alpha_dash:ascii', 'unique:users,username'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'role' => ['required', Rule::in(['admin', 'kasir'])],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -47,6 +49,7 @@ class UserController extends Controller
 
         User::create([
             'name' => $validated['name'],
+            'username' => strtolower($validated['username']),
             'email' => $validated['email'],
             'role' => $validated['role'],
             'password' => Hash::make($validated['password']),
@@ -66,6 +69,13 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => [
+                'required',
+                'string',
+                'max:50',
+                'alpha_dash:ascii',
+                Rule::unique('users', 'username')->ignore($user->id),
+            ],
             'email' => [
                 'required',
                 'email',
@@ -78,6 +88,7 @@ class UserController extends Controller
 
         $data = [
             'name' => $validated['name'],
+            'username' => strtolower($validated['username']),
             'email' => $validated['email'],
             'role' => $validated['role'],
         ];

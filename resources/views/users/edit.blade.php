@@ -41,6 +41,20 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">
+                            Username
+                        </label>
+                        <input type="text"
+                               name="username"
+                               value="{{ old('username', $user->username) }}"
+                               class="mt-1 w-full rounded-lg @error('username') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror"
+                               required>
+                        <p class="mt-1 text-xs text-gray-500">
+                            Username bisa dipakai untuk login selain email.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
                             Role
                         </label>
                         <select name="role"

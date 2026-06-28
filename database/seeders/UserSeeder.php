@@ -12,6 +12,7 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name' => 'Admin Gara Petshop',
+            'username' => 'admin',
             'email' => 'admin@garapetshop.test',
             'password' => Hash::make('password'),
             'role' => 'admin',
@@ -19,6 +20,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Kasir Gara Petshop',
+            'username' => 'kasir',
             'email' => 'kasir@garapetshop.test',
             'password' => Hash::make('password'),
             'role' => 'kasir',

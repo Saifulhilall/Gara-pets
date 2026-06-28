@@ -33,7 +33,7 @@
                             <input type="text"
                                    name="search"
                                    value="{{ $search }}"
-                                   placeholder="Nama atau email pengguna..."
+                                   placeholder="Nama, username, atau email pengguna..."
                                    class="mt-1 w-full rounded-lg border-gray-300">
                         </div>
 
@@ -69,6 +69,7 @@
                         <thead class="bg-gray-50 text-gray-700">
                             <tr>
                                 <th class="px-4 py-3 text-left">Nama</th>
+                                <th class="px-4 py-3 text-left">Username</th>
                                 <th class="px-4 py-3 text-left">Email</th>
                                 <th class="px-4 py-3 text-center">Role</th>
                                 <th class="px-4 py-3 text-left">Tanggal Dibuat</th>
@@ -87,6 +88,10 @@
                                                 (Akun Anda)
                                             </span>
                                         @endif
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        {{ $user->username }}
                                     </td>
 
                                     <td class="px-4 py-3">
@@ -136,7 +141,7 @@
                                 </tr>
                             @empty
                                 <x-empty-state
-                                    colspan="5"
+                                    colspan="6"
                                     title="Data pengguna belum tersedia."
                                     description="Tambahkan admin atau kasir untuk mengatur akses sistem."
                                     :action-href="route('users.create')"
