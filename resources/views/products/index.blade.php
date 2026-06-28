@@ -15,17 +15,9 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                    {{ session('error') }}
-                </div>
-            @endif
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="p-6 border-b">
@@ -111,7 +103,11 @@
 
                                             <form method="POST"
                                                   action="{{ route('products.destroy', $product) }}"
-                                                  onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                                                  data-confirm
+                                                  data-confirm-title="Hapus produk?"
+                                                  data-confirm-message="Produk {{ $product->name }} akan dihapus permanen jika belum digunakan dalam transaksi atau faktur."
+                                                  data-confirm-button="Hapus"
+                                                  data-confirm-variant="danger">
                                                 @csrf
                                                 @method('DELETE')
 
@@ -124,11 +120,12 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="8" class="px-4 py-8 text-center text-gray-500">
-                                        Data produk belum tersedia.
-                                    </td>
-                                </tr>
+                                <x-empty-state
+                                    colspan="8"
+                                    title="Data produk belum tersedia."
+                                    description="Tambahkan produk pertama agar transaksi dan stok bisa mulai dicatat."
+                                    :action-href="route('products.create')"
+                                    action-label="Tambah Produk" />
                             @endforelse
                         </tbody>
                     </table>

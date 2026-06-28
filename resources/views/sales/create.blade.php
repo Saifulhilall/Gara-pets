@@ -8,17 +8,11 @@
     <div class="py-8">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                    <ul class="list-disc pl-5">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
-            <form method="POST" action="{{ route('sales.store') }}" id="saleForm">
+            <form method="POST" action="{{ route('sales.store') }}" id="saleForm" data-loading data-loading-text="Menyimpan...">
                 @csrf
 
                 <div class="bg-white rounded-lg shadow-sm">
@@ -45,7 +39,7 @@
                                 <tr>
                                     <td class="px-4 py-3">
                                         <select name="product_id[]"
-                                                class="product-select w-full rounded-lg border-gray-300"
+                                                class="product-select w-full rounded-lg @error('product_id') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror"
                                                 required>
                                             <option value="">Pilih Produk</option>
                                             @foreach ($products as $product)
@@ -71,7 +65,7 @@
                                                name="quantity[]"
                                                value="1"
                                                min="1"
-                                               class="quantity-input w-24 rounded-lg border-gray-300 text-center"
+                                               class="quantity-input w-24 rounded-lg @error('quantity') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror text-center"
                                                required>
                                     </td>
 
@@ -117,7 +111,7 @@
                                    id="paidAmount"
                                    value="{{ old('paid_amount', 0) }}"
                                    min="0"
-                                   class="mt-1 w-full rounded-lg border-gray-300"
+                                   class="mt-1 w-full rounded-lg @error('paid_amount') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror"
                                    required>
                         </div>
 
@@ -134,7 +128,7 @@
                             <label class="block text-sm font-medium text-gray-700">Catatan</label>
                             <textarea name="note"
                                       rows="3"
-                                      class="mt-1 w-full rounded-lg border-gray-300">{{ old('note') }}</textarea>
+                                      class="mt-1 w-full rounded-lg @error('note') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror">{{ old('note') }}</textarea>
                         </div>
 
                         <div class="flex justify-end gap-3">

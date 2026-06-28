@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="icon" type="image/jpeg" href="{{ asset('images/logo-gpets.jpeg') }}">
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <link rel="shortcut icon" type="image/jpeg" href="{{ asset('images/logo-gpets.jpeg') }}">
+        <title>{{ config('app.name', 'G-Pets POS') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -15,24 +16,43 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-        <div class="mb-6 text-center">
-            <img src="{{ asset('images/logo-gpets.jpeg') }}"
-                alt="Logo G-Pets Gara PetShop"
-                class="mx-auto w-28 h-28 object-contain rounded-xl bg-white">
+        <div class="min-h-screen bg-gray-100 px-4 py-8 sm:flex sm:items-center sm:justify-center">
+            <div class="w-full max-w-md rounded-xl bg-white px-6 py-8 shadow-sm sm:px-8">
+                <div class="mb-7 text-center">
+                    <img src="{{ asset('images/logo-gpets.jpeg') }}"
+                         alt="Logo G-Pets Gara PetShop"
+                         class="mx-auto h-24 w-24 rounded-xl border border-gray-100 bg-white object-contain">
 
-            <h1 class="mt-4 text-2xl font-bold text-teal-700">
-                G-Pets POS
-            </h1>
+                    <h1 class="mt-4 text-2xl font-bold text-teal-700">
+                        G-Pets POS
+                    </h1>
 
-            <p class="mt-1 text-sm text-gray-500">
-                Sistem Point of Sale Gara Petshop
-            </p>
-        </div>
+                    <p class="mt-1 text-sm text-gray-500">
+                        Sistem Point of Sale Gara Petshop
+                    </p>
+                </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('form[data-loading]').forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        const button = event.submitter || form.querySelector('button[type="submit"]');
+
+                        if (! button || button.dataset.loadingStarted === 'true') {
+                            return;
+                        }
+
+                        button.dataset.loadingStarted = 'true';
+                        button.textContent = form.dataset.loadingText || 'Memproses...';
+                        button.disabled = true;
+                        button.classList.add('cursor-not-allowed', 'opacity-75');
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

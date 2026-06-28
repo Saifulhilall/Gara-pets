@@ -15,17 +15,9 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                    {{ session('error') }}
-                </div>
-            @endif
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="bg-white rounded-lg shadow-sm mb-6">
                 <div class="p-6">
@@ -103,7 +95,7 @@
 
                                     <td class="px-4 py-3 text-center">
                                         @if ($user->role === 'admin')
-                                            <span class="px-2 py-1 text-xs rounded-full bg-gray-900 text-white">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-teal-100 text-teal-700">
                                                 Admin
                                             </span>
                                         @else
@@ -126,7 +118,11 @@
 
                                             <form method="POST"
                                                   action="{{ route('users.destroy', $user) }}"
-                                                  onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">
+                                                  data-confirm
+                                                  data-confirm-title="Hapus pengguna?"
+                                                  data-confirm-message="Pengguna {{ $user->name }} akan dihapus permanen. Aksi ini tidak bisa dibatalkan."
+                                                  data-confirm-button="Hapus"
+                                                  data-confirm-variant="danger">
                                                 @csrf
                                                 @method('DELETE')
 
@@ -139,11 +135,12 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">
-                                        Data pengguna belum tersedia.
-                                    </td>
-                                </tr>
+                                <x-empty-state
+                                    colspan="5"
+                                    title="Data pengguna belum tersedia."
+                                    description="Tambahkan admin atau kasir untuk mengatur akses sistem."
+                                    :action-href="route('users.create')"
+                                    action-label="Tambah Pengguna" />
                             @endforelse
                         </tbody>
                     </table>

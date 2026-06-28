@@ -141,7 +141,7 @@ class SaleController extends Controller
 
         return redirect()
             ->route('sales.index')
-            ->with('success', 'Transaksi penjualan berhasil disimpan.');
+            ->with('success', 'Transaksi penjualan berhasil disimpan. Stok produk otomatis berkurang dan riwayat stok sudah tercatat.');
     }
 
     public function show(Sale $sale): View

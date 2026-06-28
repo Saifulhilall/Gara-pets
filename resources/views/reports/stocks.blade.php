@@ -7,6 +7,9 @@
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white p-5 rounded-lg shadow-sm">
@@ -151,11 +154,12 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="8" class="px-4 py-8 text-center text-gray-500">
-                                        Data laporan stok belum tersedia.
-                                    </td>
-                                </tr>
+                                <x-empty-state
+                                    colspan="8"
+                                    title="Data laporan stok belum tersedia."
+                                    description="Laporan stok akan tampil setelah data produk tersedia atau filter disesuaikan."
+                                    :action-href="route('products.create')"
+                                    action-label="Tambah Produk" />
                             @endforelse
                         </tbody>
 

@@ -98,7 +98,14 @@
             </p>
         </div>
 
-        <form method="POST" action="{{ route('logout') }}" class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50">
+        <form method="POST"
+              action="{{ route('logout') }}"
+              class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50"
+              data-confirm
+              data-confirm-title="Logout dari sistem?"
+              data-confirm-message="Sesi Anda akan diakhiri dan Anda perlu login kembali untuk mengakses G-Pets POS."
+              data-confirm-button="Logout"
+              data-confirm-variant="danger">
             @csrf
 
             <button type="submit"

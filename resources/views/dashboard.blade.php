@@ -7,6 +7,9 @@
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="mb-6 bg-white rounded-lg shadow-sm p-6 border-l-4 border-teal-700">
                 <h3 class="text-lg font-semibold text-gray-800">
@@ -87,11 +90,10 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="3" class="px-4 py-6 text-center text-gray-500">
-                                            Belum ada transaksi.
-                                        </td>
-                                    </tr>
+                                    <x-empty-state
+                                        colspan="3"
+                                        title="Belum ada transaksi."
+                                        description="Transaksi terbaru akan muncul setelah penjualan dibuat." />
                                 @endforelse
                             </tbody>
                         </table>
@@ -132,11 +134,10 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="3" class="px-4 py-6 text-center text-gray-500">
-                                            Tidak ada produk stok rendah.
-                                        </td>
-                                    </tr>
+                                    <x-empty-state
+                                        colspan="3"
+                                        title="Tidak ada produk stok rendah."
+                                        description="Semua stok produk masih berada di atas batas minimum." />
                                 @endforelse
                             </tbody>
                         </table>
@@ -187,11 +188,10 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="5" class="px-4 py-6 text-center text-gray-500">
-                                        Belum ada riwayat stok.
-                                    </td>
-                                </tr>
+                                <x-empty-state
+                                    colspan="5"
+                                    title="Belum ada riwayat stok."
+                                    description="Riwayat akan muncul setelah stok berubah." />
                             @endforelse
                         </tbody>
                     </table>

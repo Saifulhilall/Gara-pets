@@ -70,6 +70,6 @@ class StockController extends Controller
 
         return redirect()
             ->route('stocks.index')
-            ->with('success', 'Penyesuaian stok berhasil disimpan.');
+            ->with('success', 'Penyesuaian stok berhasil disimpan. Perubahan stok sudah masuk ke riwayat stok.');
     }
 }

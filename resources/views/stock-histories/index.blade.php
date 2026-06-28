@@ -7,6 +7,9 @@
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="bg-white rounded-lg shadow-sm mb-6">
                 <div class="p-6">
@@ -157,11 +160,10 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="9" class="px-4 py-8 text-center text-gray-500">
-                                        Riwayat perubahan stok belum tersedia.
-                                    </td>
-                                </tr>
+                                <x-empty-state
+                                    colspan="9"
+                                    title="Riwayat stok belum tersedia."
+                                    description="Perubahan stok dari transaksi, faktur, atau penyesuaian akan tampil di sini." />
                             @endforelse
                         </tbody>
                     </table>

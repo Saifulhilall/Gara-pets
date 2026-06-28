@@ -143,7 +143,7 @@ class PurchaseInvoiceController extends Controller
 
         return redirect()
             ->route('purchase-invoices.index')
-            ->with('success', 'Faktur pembelian berhasil disimpan dan stok berhasil diperbarui.');
+            ->with('success', 'Faktur pembelian berhasil disimpan. Stok produk otomatis bertambah dan riwayat stok sudah tercatat.');
     }
 
     public function show(PurchaseInvoice $purchaseInvoice): View

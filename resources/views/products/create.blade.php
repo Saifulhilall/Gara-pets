@@ -8,23 +8,17 @@
     <div class="py-8">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                    <ul class="list-disc pl-5">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="bg-white rounded-lg shadow-sm p-6">
-                <form method="POST" action="{{ route('products.store') }}" class="space-y-5">
+                <form method="POST" action="{{ route('products.store') }}" class="space-y-5" data-loading data-loading-text="Menyimpan...">
                     @csrf
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Kategori</label>
-                        <select name="category_id" class="mt-1 w-full rounded-lg border-gray-300">
+                        <select name="category_id" class="mt-1 w-full rounded-lg @error('category_id') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror">
                             <option value="">Tanpa Kategori</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
@@ -38,13 +32,13 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Kode Produk</label>
                             <input type="text" name="code" value="{{ old('code') }}"
-                                   class="mt-1 w-full rounded-lg border-gray-300" required>
+                                   class="mt-1 w-full rounded-lg @error('code') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Nama Produk</label>
                             <input type="text" name="name" value="{{ old('name') }}"
-                                   class="mt-1 w-full rounded-lg border-gray-300" required>
+                                   class="mt-1 w-full rounded-lg @error('name') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror" required>
                         </div>
                     </div>
 
@@ -52,13 +46,13 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Harga Beli</label>
                             <input type="number" name="purchase_price" value="{{ old('purchase_price', 0) }}"
-                                   class="mt-1 w-full rounded-lg border-gray-300" min="0" required>
+                                   class="mt-1 w-full rounded-lg @error('purchase_price') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror" min="0" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Harga Jual</label>
                             <input type="number" name="selling_price" value="{{ old('selling_price', 0) }}"
-                                   class="mt-1 w-full rounded-lg border-gray-300" min="0" required>
+                                   class="mt-1 w-full rounded-lg @error('selling_price') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror" min="0" required>
                         </div>
                     </div>
 
@@ -66,26 +60,26 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Stok Awal</label>
                             <input type="number" name="stock" value="{{ old('stock', 0) }}"
-                                   class="mt-1 w-full rounded-lg border-gray-300" min="0" required>
+                                   class="mt-1 w-full rounded-lg @error('stock') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror" min="0" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Stok Minimum</label>
                             <input type="number" name="minimum_stock" value="{{ old('minimum_stock', 0) }}"
-                                   class="mt-1 w-full rounded-lg border-gray-300" min="0" required>
+                                   class="mt-1 w-full rounded-lg @error('minimum_stock') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror" min="0" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Satuan</label>
                             <input type="text" name="unit" value="{{ old('unit', 'pcs') }}"
-                                   class="mt-1 w-full rounded-lg border-gray-300" required>
+                                   class="mt-1 w-full rounded-lg @error('unit') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror" required>
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
                         <textarea name="description" rows="3"
-                                  class="mt-1 w-full rounded-lg border-gray-300">{{ old('description') }}</textarea>
+                                  class="mt-1 w-full rounded-lg @error('description') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror">{{ old('description') }}</textarea>
                     </div>
 
                     <div class="flex justify-end gap-3">

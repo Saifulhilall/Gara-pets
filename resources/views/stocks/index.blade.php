@@ -8,21 +8,9 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                    <ul class="list-disc pl-5">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="bg-white rounded-lg shadow-sm mb-6">
                 <div class="p-6">
@@ -132,7 +120,13 @@
                                         <form method="POST"
                                               action="{{ route('stocks.adjust', $product) }}"
                                               class="space-y-2"
-                                              onsubmit="return confirm('Yakin ingin menyesuaikan stok produk ini?')">
+                                              data-loading
+                                              data-loading-text="Menyimpan..."
+                                              data-confirm
+                                              data-confirm-title="Simpan penyesuaian stok?"
+                                              data-confirm-message="Stok {{ $product->name }} akan disesuaikan dan perubahan dicatat ke riwayat stok."
+                                              data-confirm-button="Simpan"
+                                              data-confirm-variant="primary">
                                             @csrf
                                             @method('PATCH')
 
@@ -141,13 +135,13 @@
                                                        name="stock"
                                                        value="{{ $product->stock }}"
                                                        min="0"
-                                                       class="rounded-lg border-gray-300 text-sm"
+                                                       class="rounded-lg @error('stock') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror text-sm"
                                                        required>
 
                                                 <input type="text"
                                                        name="note"
                                                        placeholder="Keterangan penyesuaian"
-                                                       class="md:col-span-2 rounded-lg border-gray-300 text-sm"
+                                                       class="md:col-span-2 rounded-lg @error('note') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror text-sm"
                                                        required>
                                             </div>
 
@@ -159,11 +153,12 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="7" class="px-4 py-8 text-center text-gray-500">
-                                        Data stok barang belum tersedia.
-                                    </td>
-                                </tr>
+                                <x-empty-state
+                                    colspan="7"
+                                    title="Data stok barang belum tersedia."
+                                    description="Stok akan muncul setelah produk ditambahkan."
+                                    :action-href="route('products.create')"
+                                    action-label="Tambah Produk" />
                             @endforelse
                         </tbody>
                     </table>

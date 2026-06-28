@@ -7,6 +7,9 @@
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white p-5 rounded-lg shadow-sm">
@@ -142,17 +145,16 @@
 
                                     <td class="px-4 py-3 text-center">
                                         <a href="{{ route('sales.show', $sale) }}"
-                                           class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
+                                           class="px-3 py-1 bg-teal-50 text-teal-700 rounded text-xs font-medium hover:bg-teal-100">
                                             Lihat
                                         </a>
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="8" class="px-4 py-8 text-center text-gray-500">
-                                        Data laporan penjualan belum tersedia.
-                                    </td>
-                                </tr>
+                                <x-empty-state
+                                    colspan="8"
+                                    title="Data laporan penjualan belum tersedia."
+                                    description="Laporan akan terisi setelah ada transaksi penjualan sesuai filter." />
                             @endforelse
                         </tbody>
 

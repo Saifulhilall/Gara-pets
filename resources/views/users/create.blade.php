@@ -8,18 +8,12 @@
     <div class="py-8">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                    <ul class="list-disc pl-5">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="bg-white rounded-lg shadow-sm p-6">
-                <form method="POST" action="{{ route('users.store') }}" class="space-y-5">
+                <form method="POST" action="{{ route('users.store') }}" class="space-y-5" data-loading data-loading-text="Menyimpan...">
                     @csrf
 
                     <div>
@@ -29,7 +23,7 @@
                         <input type="text"
                                name="name"
                                value="{{ old('name') }}"
-                               class="mt-1 w-full rounded-lg border-gray-300"
+                               class="mt-1 w-full rounded-lg @error('name') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror"
                                required>
                     </div>
 
@@ -40,7 +34,7 @@
                         <input type="email"
                                name="email"
                                value="{{ old('email') }}"
-                               class="mt-1 w-full rounded-lg border-gray-300"
+                               class="mt-1 w-full rounded-lg @error('email') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror"
                                required>
                     </div>
 
@@ -49,7 +43,7 @@
                             Role
                         </label>
                         <select name="role"
-                                class="mt-1 w-full rounded-lg border-gray-300"
+                                class="mt-1 w-full rounded-lg @error('role') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror"
                                 required>
                             <option value="">Pilih Role</option>
                             <option value="admin" @selected(old('role') === 'admin')>Admin</option>
@@ -64,7 +58,7 @@
                             </label>
                             <input type="password"
                                    name="password"
-                                   class="mt-1 w-full rounded-lg border-gray-300"
+                                   class="mt-1 w-full rounded-lg @error('password') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror"
                                    required>
                         </div>
 
@@ -74,7 +68,7 @@
                             </label>
                             <input type="password"
                                    name="password_confirmation"
-                                   class="mt-1 w-full rounded-lg border-gray-300"
+                                   class="mt-1 w-full rounded-lg @error('password_confirmation') border-red-400 focus:border-red-500 focus:ring-red-500 @else border-gray-300 @enderror"
                                    required>
                         </div>
                     </div>

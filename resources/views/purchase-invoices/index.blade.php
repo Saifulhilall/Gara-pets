@@ -15,11 +15,9 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-                    {{ session('success') }}
-                </div>
-            @endif
+            <div class="mb-4">
+                <x-alert />
+            </div>
 
             <div class="bg-white rounded-lg shadow-sm mb-6">
                 <div class="p-6">
@@ -108,17 +106,18 @@
 
                                     <td class="px-4 py-3 text-center">
                                         <a href="{{ route('purchase-invoices.show', $invoice) }}"
-                                           class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
+                                           class="px-3 py-1 bg-teal-50 text-teal-700 rounded text-xs font-medium hover:bg-teal-100">
                                             Detail
                                         </a>
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="7" class="px-4 py-8 text-center text-gray-500">
-                                        Data faktur pembelian belum tersedia.
-                                    </td>
-                                </tr>
+                                <x-empty-state
+                                    colspan="7"
+                                    title="Belum ada faktur pembelian."
+                                    description="Buat faktur pembelian untuk mencatat barang masuk dan menambah stok otomatis."
+                                    :action-href="route('purchase-invoices.create')"
+                                    action-label="Tambah Faktur" />
                             @endforelse
                         </tbody>
                     </table>
