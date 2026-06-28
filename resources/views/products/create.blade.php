@@ -1,0 +1,107 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Tambah Produk
+        </h2>
+    </x-slot>
+
+    <div class="py-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            @if ($errors->any())
+                <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <form method="POST" action="{{ route('products.store') }}" class="space-y-5">
+                    @csrf
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Kategori</label>
+                        <select name="category_id" class="mt-1 w-full rounded-lg border-gray-300">
+                            <option value="">Tanpa Kategori</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Kode Produk</label>
+                            <input type="text" name="code" value="{{ old('code') }}"
+                                   class="mt-1 w-full rounded-lg border-gray-300" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nama Produk</label>
+                            <input type="text" name="name" value="{{ old('name') }}"
+                                   class="mt-1 w-full rounded-lg border-gray-300" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Harga Beli</label>
+                            <input type="number" name="purchase_price" value="{{ old('purchase_price', 0) }}"
+                                   class="mt-1 w-full rounded-lg border-gray-300" min="0" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Harga Jual</label>
+                            <input type="number" name="selling_price" value="{{ old('selling_price', 0) }}"
+                                   class="mt-1 w-full rounded-lg border-gray-300" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Stok Awal</label>
+                            <input type="number" name="stock" value="{{ old('stock', 0) }}"
+                                   class="mt-1 w-full rounded-lg border-gray-300" min="0" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Stok Minimum</label>
+                            <input type="number" name="minimum_stock" value="{{ old('minimum_stock', 0) }}"
+                                   class="mt-1 w-full rounded-lg border-gray-300" min="0" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Satuan</label>
+                            <input type="text" name="unit" value="{{ old('unit', 'pcs') }}"
+                                   class="mt-1 w-full rounded-lg border-gray-300" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                        <textarea name="description" rows="3"
+                                  class="mt-1 w-full rounded-lg border-gray-300">{{ old('description') }}</textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <a href="{{ route('products.index') }}"
+                           class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
+                            Batal
+                        </a>
+
+                        <button type="submit"
+                                class="px-4 py-2 bg-teal-700 text-white rounded-lg text-sm font-medium hover:bg-teal-800">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</x-app-layout>
