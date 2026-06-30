@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+            // Kode produk dibuat unik agar mudah dicari saat transaksi.
             $table->string('code')->unique();
             $table->string('name');
+            // Harga beli dipakai untuk perhitungan nilai stok dan faktur.
             $table->decimal('purchase_price', 12, 2)->default(0);
             $table->decimal('selling_price', 12, 2)->default(0);
             $table->integer('stock')->default(0);
+            // Batas minimum untuk menandai stok rendah.
             $table->integer('minimum_stock')->default(0);
             $table->string('unit')->default('pcs');
             $table->text('description')->nullable();

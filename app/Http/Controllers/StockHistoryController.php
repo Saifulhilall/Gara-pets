@@ -8,18 +8,32 @@ use Illuminate\View\View;
 
 class StockHistoryController extends Controller
 {
+    // Menampilkan audit perubahan stok dari transaksi, pembelian, dan penyesuaian.
     public function index(Request $request): View
     {
-        $search = $request->search;
+        $search = trim((string) $request->search);
         $type = $request->type;
         $startDate = $request->start_date;
         $endDate = $request->end_date;
 
         $histories = StockHistory::with(['product.category', 'user'])
             ->when($search, function ($query) use ($search) {
-                $query->whereHas('product', function ($productQuery) use ($search) {
-                    $productQuery->where('name', 'like', "%{$search}%")
-                        ->orWhere('code', 'like', "%{$search}%");
+                // Pencarian riwayat mencakup sumber, catatan, produk, kategori, dan user.
+                $query->where(function ($searchQuery) use ($search) {
+                    $searchQuery->where('source', 'like', "%{$search}%")
+                        ->orWhere('note', 'like', "%{$search}%")
+                        ->orWhereHas('product', function ($productQuery) use ($search) {
+                            $productQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('code', 'like', "%{$search}%")
+                                ->orWhereHas('category', function ($categoryQuery) use ($search) {
+                                    $categoryQuery->where('name', 'like', "%{$search}%");
+                                });
+                        })
+                        ->orWhereHas('user', function ($userQuery) use ($search) {
+                            $userQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('username', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                        });
                 });
             })
             ->when($type, function ($query) use ($type) {

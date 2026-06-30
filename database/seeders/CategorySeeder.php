@@ -9,6 +9,7 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
+        // Kategori dasar dibuat lebih dulu karena produk membutuhkan kategori.
         $categories = [
             'Makanan Hewan',
             'Perlengkapan Hewan',

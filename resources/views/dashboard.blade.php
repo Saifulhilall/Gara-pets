@@ -11,6 +11,7 @@
                 <x-alert />
             </div>
 
+            {{-- Sapaan dan konteks role pengguna aktif --}}
             <div class="mb-6 bg-white rounded-lg shadow-sm p-6 border-l-4 border-teal-700">
                 <h3 class="text-lg font-semibold text-gray-800">
                     Selamat datang, {{ Auth::user()->name }}
@@ -20,6 +21,7 @@
                 </p>
             </div>
 
+            {{-- Ringkasan data utama toko --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white p-5 rounded-lg shadow-sm">
                     <p class="text-sm text-gray-500">Total Produk</p>
@@ -42,6 +44,7 @@
                 </div>
             </div>
 
+            {{-- Ringkasan transaksi dan pendapatan hari ini --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div class="bg-white p-5 rounded-lg shadow-sm">
                     <p class="text-sm text-gray-500">Transaksi Hari Ini</p>
@@ -56,6 +59,7 @@
                 </div>
             </div>
 
+            {{-- Tabel transaksi terbaru dan produk yang perlu restock --}}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white rounded-lg shadow-sm">
                     <div class="p-6 border-b">
@@ -145,6 +149,7 @@
                 </div>
             </div>
 
+            {{-- Riwayat perubahan stok terbaru --}}
             <div class="mt-6 bg-white rounded-lg shadow-sm">
                 <div class="p-6 border-b">
                     <h3 class="text-lg font-semibold text-gray-800">

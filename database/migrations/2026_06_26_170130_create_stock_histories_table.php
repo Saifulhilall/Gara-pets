@@ -13,11 +13,14 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
     
+            // Tipe membedakan stok masuk, keluar, dan penyesuaian manual.
             $table->enum('type', ['masuk', 'keluar', 'penyesuaian']);
             $table->integer('quantity');
+            // Simpan posisi stok sebelum dan sesudah perubahan untuk audit.
             $table->integer('stock_before');
             $table->integer('stock_after');
     
+            // Sumber dan reference_id mengarah ke transaksi, faktur, atau penyesuaian.
             $table->string('source')->nullable();
             $table->unsignedBigInteger('reference_id')->nullable();
             $table->text('note')->nullable();

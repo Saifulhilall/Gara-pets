@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            // Kode transaksi unik untuk pelacakan struk penjualan.
             $table->string('transaction_code')->unique();
             $table->dateTime('transaction_date');
+            // Total, bayar, dan kembalian disimpan agar detail pembayaran tidak berubah.
             $table->decimal('total_amount', 12, 2)->default(0);
             $table->decimal('paid_amount', 12, 2)->default(0);
             $table->decimal('change_amount', 12, 2)->default(0);

@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
+            // Nama kategori dipakai untuk mengelompokkan produk petshop.
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();

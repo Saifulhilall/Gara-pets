@@ -10,8 +10,10 @@ use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
+    // Ambil ringkasan utama dan aktivitas terbaru untuk dashboard POS.
     public function index(): View
     {
+        // Transaksi hari ini dipakai ulang untuk jumlah transaksi dan pendapatan harian.
         $todaySales = Sale::whereDate('transaction_date', today())->get();
 
         return view('dashboard', [

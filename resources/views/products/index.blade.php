@@ -21,11 +21,12 @@
 
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="p-6 border-b">
+                    {{-- Pencarian produk tetap mempertahankan pagination dan sorting --}}
                     <form method="GET" action="{{ route('products.index') }}" class="flex gap-3">
                         <input type="text"
                                name="search"
                                value="{{ $search }}"
-                               placeholder="Cari kode atau nama produk..."
+                               placeholder="Cari kode, nama, kategori, atau satuan produk..."
                                class="w-full rounded-lg border-gray-300 focus:border-gray-500 focus:ring-gray-500">
 
                         <button type="submit"
@@ -40,17 +41,32 @@
                     </form>
                 </div>
 
+                {{-- Tabel master produk dengan header sortable --}}
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50 text-gray-700">
                             <tr>
-                                <th class="px-4 py-3 text-left">Kode</th>
-                                <th class="px-4 py-3 text-left">Nama Produk</th>
-                                <th class="px-4 py-3 text-left">Kategori</th>
-                                <th class="px-4 py-3 text-right">Harga Beli</th>
-                                <th class="px-4 py-3 text-right">Harga Jual</th>
-                                <th class="px-4 py-3 text-center">Stok</th>
-                                <th class="px-4 py-3 text-center">Status</th>
+                                <th class="px-4 py-3 text-left">
+                                    <x-sortable-header field="code" label="Kode" :sort="$sort" :direction="$direction" />
+                                </th>
+                                <th class="px-4 py-3 text-left">
+                                    <x-sortable-header field="name" label="Nama Produk" :sort="$sort" :direction="$direction" />
+                                </th>
+                                <th class="px-4 py-3 text-left">
+                                    <x-sortable-header field="category" label="Kategori" :sort="$sort" :direction="$direction" />
+                                </th>
+                                <th class="px-4 py-3 text-right">
+                                    <x-sortable-header field="purchase_price" label="Harga Beli" align="right" :sort="$sort" :direction="$direction" />
+                                </th>
+                                <th class="px-4 py-3 text-right">
+                                    <x-sortable-header field="selling_price" label="Harga Jual" align="right" :sort="$sort" :direction="$direction" />
+                                </th>
+                                <th class="px-4 py-3 text-center">
+                                    <x-sortable-header field="stock" label="Stok" align="center" :sort="$sort" :direction="$direction" />
+                                </th>
+                                <th class="px-4 py-3 text-center">
+                                    <x-sortable-header field="status" label="Status" align="center" :sort="$sort" :direction="$direction" />
+                                </th>
                                 <th class="px-4 py-3 text-center">Aksi</th>
                             </tr>
                         </thead>

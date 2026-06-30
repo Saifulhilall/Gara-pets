@@ -16,11 +16,13 @@ class Sale extends Model
         'note',
     ];
 
+    // Transaksi penjualan dicatat atas nama kasir yang login.
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    // Item penjualan menyimpan produk, jumlah, harga, dan subtotal.
     public function items()
     {
         return $this->hasMany(SaleItem::class);

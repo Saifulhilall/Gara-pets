@@ -25,6 +25,7 @@
                         Filter Pengguna
                     </h3>
 
+                    {{-- Filter pengguna internal berdasarkan identitas dan role --}}
                     <form method="GET" action="{{ route('users.index') }}" class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700">
@@ -63,6 +64,7 @@
                 </div>
             </div>
 
+            {{-- Tabel akun admin dan kasir --}}
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">

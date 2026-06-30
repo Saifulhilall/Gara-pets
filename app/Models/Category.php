@@ -11,6 +11,7 @@ class Category extends Model
         'description',
     ];
 
+    // Satu kategori dapat dipakai oleh banyak produk.
     public function products()
     {
         return $this->hasMany(Product::class);

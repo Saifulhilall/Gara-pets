@@ -15,6 +15,7 @@
             <form method="POST" action="{{ route('sales.store') }}" id="saleForm" data-loading data-loading-text="Menyimpan...">
                 @csrf
 
+                {{-- Daftar produk yang dijual dalam satu transaksi --}}
                 <div class="bg-white rounded-lg shadow-sm">
                     <div class="p-6 border-b">
                         <h3 class="text-lg font-semibold text-gray-800">
@@ -93,6 +94,7 @@
                     </div>
                 </div>
 
+                {{-- Ringkasan pembayaran dan kembalian --}}
                 <div class="mt-6 bg-white rounded-lg shadow-sm">
                     <div class="p-6 space-y-5">
                         <div>
@@ -150,10 +152,12 @@
     </div>
 
     <script>
+        // Format angka ke Rupiah untuk tampilan kasir.
         function formatRupiah(number) {
             return 'Rp ' + Number(number).toLocaleString('id-ID');
         }
 
+        // Hitung subtotal satu baris berdasarkan produk dan jumlah.
         function calculateRow(row) {
             const select = row.querySelector('.product-select');
             const quantityInput = row.querySelector('.quantity-input');
@@ -171,6 +175,7 @@
             return subtotal;
         }
 
+        // Hitung ulang total transaksi dan kembalian.
         function calculateTotal() {
             let total = 0;
 
@@ -186,6 +191,7 @@
             document.getElementById('changeDisplay').value = formatRupiah(change > 0 ? change : 0);
         }
 
+        // Pasang event pada baris produk, termasuk hapus baris.
         function bindEvents(row) {
             row.querySelector('.product-select').addEventListener('change', calculateTotal);
             row.querySelector('.quantity-input').addEventListener('input', calculateTotal);
@@ -202,6 +208,7 @@
 
         document.querySelectorAll('#itemsTable tbody tr').forEach(bindEvents);
 
+        // Duplikasi baris produk agar transaksi bisa memiliki banyak item.
         document.getElementById('addRow').addEventListener('click', function() {
             const tbody = document.querySelector('#itemsTable tbody');
             const firstRow = tbody.querySelector('tr');

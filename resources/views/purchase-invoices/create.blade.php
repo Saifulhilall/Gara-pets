@@ -15,6 +15,7 @@
             <form method="POST" action="{{ route('purchase-invoices.store') }}" data-loading data-loading-text="Menyimpan...">
                 @csrf
 
+                {{-- Informasi utama faktur pembelian --}}
                 <div class="bg-white rounded-lg shadow-sm mb-6">
                     <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
                         <div>
@@ -47,6 +48,7 @@
                     </div>
                 </div>
 
+                {{-- Daftar barang masuk yang akan menambah stok --}}
                 <div class="bg-white rounded-lg shadow-sm">
                     <div class="p-6 border-b">
                         <h3 class="text-lg font-semibold text-gray-800">
@@ -130,6 +132,7 @@
                     </div>
                 </div>
 
+                {{-- Total pembelian dan catatan faktur --}}
                 <div class="mt-6 bg-white rounded-lg shadow-sm">
                     <div class="p-6 space-y-5">
                         <div>
@@ -167,10 +170,12 @@
     </div>
 
     <script>
+        // Format angka ke Rupiah untuk tampilan faktur.
         function formatRupiah(number) {
             return 'Rp ' + Number(number).toLocaleString('id-ID');
         }
 
+        // Hitung subtotal satu baris barang masuk.
         function calculateRow(row) {
             const select = row.querySelector('.product-select');
             const quantityInput = row.querySelector('.quantity-input');
@@ -188,6 +193,7 @@
             return subtotal;
         }
 
+        // Hitung total pembelian dari seluruh baris item.
         function calculateTotal() {
             let total = 0;
 
@@ -198,6 +204,7 @@
             document.getElementById('totalDisplay').value = formatRupiah(total);
         }
 
+        // Pasang event produk, jumlah, harga, dan hapus baris.
         function bindEvents(row) {
             const select = row.querySelector('.product-select');
             const quantityInput = row.querySelector('.quantity-input');
@@ -226,6 +233,7 @@
 
         document.querySelectorAll('#itemsTable tbody tr').forEach(bindEvents);
 
+        // Tambah baris item tanpa reload halaman.
         document.getElementById('addRow').addEventListener('click', function() {
             const tbody = document.querySelector('#itemsTable tbody');
             const firstRow = tbody.querySelector('tr');

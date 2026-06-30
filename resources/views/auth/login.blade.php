@@ -1,6 +1,7 @@
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    {{-- Form login internal admin dan kasir --}}
     <form method="POST" action="{{ route('login') }}" data-loading data-loading-text="Memproses...">
         @csrf
 
@@ -13,6 +14,7 @@
             </p>
         </div>
 
+        {{-- Identitas login bisa memakai email atau username --}}
         <div class="space-y-5">
             <div>
             <x-input-label for="login" value="Email atau Username" />

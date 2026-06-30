@@ -11,13 +11,16 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 
+// Halaman utama diarahkan ke login karena POS hanya untuk pengguna terdaftar.
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Dashboard menampilkan ringkasan utama POS.
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
+    // Fitur transaksi penjualan dapat diakses oleh user yang sudah login.
     Route::middleware(['auth', 'verified'])->group(function () {
      Route::resource('/transaksi', SaleController::class)
     ->only(['index', 'create', 'store', 'show'])
@@ -28,16 +31,19 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 require __DIR__.'/auth.php';
 
 
+    // Riwayat stok dipisahkan agar admin dan kasir bisa menelusuri pergerakan barang.
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/riwayat-stok', [StockHistoryController::class, 'index'])
         ->name('stock-histories.index');
     });
 
+    // Fitur master data dan laporan dibatasi untuk admin.
     Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
         Route::resource('/produk', ProductController::class)
             ->names('products')
             ->parameters(['produk' => 'product']);
 
+            // Faktur pembelian menambah stok dan hanya dikelola admin.
             Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
                 Route::resource('/faktur-pembelian', PurchaseInvoiceController::class)
                 ->only(['index', 'create', 'store', 'show'])
@@ -45,6 +51,7 @@ require __DIR__.'/auth.php';
                 ->parameters(['faktur-pembelian' => 'purchaseInvoice']);
             });
 
+        // Penyesuaian stok manual hanya tersedia untuk admin.
         Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
         Route::get('/stok', [StockController::class, 'index'])
         ->name('stocks.index');
@@ -53,6 +60,7 @@ require __DIR__.'/auth.php';
             ->name('stocks.adjust');
         });
 
+        // Laporan penjualan dan stok digunakan untuk monitoring toko.
         Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
         Route::get('/laporan-penjualan', [ReportController::class, 'sales'])
             ->name('reports.sales');
@@ -61,6 +69,7 @@ require __DIR__.'/auth.php';
             ->name('reports.stocks');  
         });
 
+        // Pengelolaan akun internal admin dan kasir.
         Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
             Route::resource('/pengguna', UserController::class)
             ->names('users')

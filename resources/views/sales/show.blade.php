@@ -15,6 +15,7 @@
     <div class="py-8">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
+            {{-- Informasi utama transaksi --}}
             <div class="bg-white rounded-lg shadow-sm mb-6">
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
@@ -41,6 +42,7 @@
                 </div>
             </div>
 
+            {{-- Detail produk yang terjual dan total pembayaran --}}
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="p-6 border-b">
                     <h3 class="text-lg font-semibold text-gray-800">

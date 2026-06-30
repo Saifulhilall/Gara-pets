@@ -21,13 +21,14 @@
 
             <div class="bg-white rounded-lg shadow-sm mb-6">
                 <div class="p-6">
+                    {{-- Filter faktur berdasarkan nomor, supplier, produk, dan periode --}}
                     <form method="GET" action="{{ route('purchase-invoices.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700">Cari Faktur</label>
                             <input type="text"
                                    name="search"
                                    value="{{ $search }}"
-                                   placeholder="Nomor faktur, supplier, atau admin..."
+                                   placeholder="Nomor faktur, supplier, admin, produk, atau catatan..."
                                    class="mt-1 w-full rounded-lg border-gray-300">
                         </div>
 
@@ -62,6 +63,7 @@
                 </div>
             </div>
 
+            {{-- Tabel riwayat faktur pembelian --}}
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">

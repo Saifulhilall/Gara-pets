@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('purchase_invoice_id')->constrained('purchase_invoices')->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
+            // Quantity dan harga beli menentukan stok masuk serta subtotal faktur.
             $table->integer('quantity');
             $table->decimal('price', 12, 2);
             $table->decimal('subtotal', 12, 2);

@@ -14,18 +14,29 @@ use Illuminate\View\View;
 
 class PurchaseInvoiceController extends Controller
 {
+    // Menampilkan faktur pembelian dengan filter tanggal dan pencarian.
     public function index(Request $request): View
     {
-        $search = $request->search;
+        $search = trim((string) $request->search);
         $startDate = $request->start_date;
         $endDate = $request->end_date;
 
         $invoices = PurchaseInvoice::with(['user', 'items.product'])
             ->when($search, function ($query) use ($search) {
-                $query->where('invoice_number', 'like', "%{$search}%")
-                    ->orWhere('supplier_name', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery->where('name', 'like', "%{$search}%");
+                // Pencarian mencakup nomor faktur, supplier, admin, catatan, dan produk.
+                $query->where(function ($searchQuery) use ($search) {
+                    $searchQuery->where('invoice_number', 'like', "%{$search}%")
+                        ->orWhere('supplier_name', 'like', "%{$search}%")
+                        ->orWhere('note', 'like', "%{$search}%")
+                        ->orWhereHas('user', function ($userQuery) use ($search) {
+                            $userQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('username', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('items.product', function ($productQuery) use ($search) {
+                            $productQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('code', 'like', "%{$search}%");
+                        });
                     });
             })
             ->when($startDate, function ($query) use ($startDate) {
@@ -48,6 +59,7 @@ class PurchaseInvoiceController extends Controller
 
     public function create(): View
     {
+        // Produk dipakai sebagai pilihan item yang akan menambah stok.
         $products = Product::orderBy('name')->get();
 
         return view('purchase-invoices.create', compact('products'));
@@ -55,6 +67,7 @@ class PurchaseInvoiceController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        // Validasi memastikan nomor faktur unik dan item pembelian lengkap.
         $validated = $request->validate([
             'invoice_number' => [
                 'required',
@@ -73,17 +86,20 @@ class PurchaseInvoiceController extends Controller
             'note' => ['nullable', 'string'],
         ]);
 
+        // Satu produk cukup muncul sekali agar update stok dan subtotal tidak rancu.
         if (count($validated['product_id']) !== count(array_unique($validated['product_id']))) {
             return back()
                 ->withErrors(['product_id' => 'Produk yang sama tidak boleh dipilih lebih dari satu kali dalam satu faktur pembelian.'])
                 ->withInput();
         }
 
+        // Faktur, item, update stok, dan riwayat stok disimpan atomik.
         DB::transaction(function () use ($validated) {
             $totalAmount = 0;
             $items = [];
 
             foreach ($validated['product_id'] as $index => $productId) {
+                // Lock produk agar stok masuk tidak bentrok dengan proses lain.
                 $product = Product::where('id', $productId)->lockForUpdate()->first();
 
                 $quantity = (int) $validated['quantity'][$index];
@@ -127,6 +143,7 @@ class PurchaseInvoiceController extends Controller
                     'purchase_price' => $item['price'],
                 ]);
 
+                // Stok masuk dari pembelian dicatat sebagai histori barang.
                 StockHistory::create([
                     'product_id' => $product->id,
                     'user_id' => auth()->id(),
@@ -148,6 +165,7 @@ class PurchaseInvoiceController extends Controller
 
     public function show(PurchaseInvoice $purchaseInvoice): View
     {
+        // Detail faktur memuat admin, item, produk, dan kategori produk.
         $purchaseInvoice->load(['user', 'items.product.category']);
 
         return view('purchase-invoices.show', compact('purchaseInvoice'));

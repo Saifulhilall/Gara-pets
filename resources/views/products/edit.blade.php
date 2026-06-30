@@ -13,6 +13,7 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-sm p-6">
+                {{-- Form perubahan produk; perubahan stok akan tercatat ke riwayat --}}
                 <form method="POST" action="{{ route('products.update', $product) }}" class="space-y-5" data-loading data-loading-text="Memperbarui...">
                     @csrf
                     @method('PUT')

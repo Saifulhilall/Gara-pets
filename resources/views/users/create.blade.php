@@ -13,6 +13,7 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-sm p-6">
+                {{-- Form pembuatan akun internal admin atau kasir --}}
                 <form method="POST" action="{{ route('users.store') }}" class="space-y-5" data-loading data-loading-text="Menyimpan...">
                     @csrf
 

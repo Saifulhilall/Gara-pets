@@ -10,6 +10,7 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
+        // Batasi halaman sesuai role yang didefinisikan pada route.
         if (! auth()->check() || ! in_array(auth()->user()->role, $roles)) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }

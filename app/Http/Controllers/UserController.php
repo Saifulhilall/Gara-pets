@@ -11,16 +11,19 @@ use Illuminate\View\View;
 
 class UserController extends Controller
 {
+    // Menampilkan daftar pengguna dengan filter role dan pencarian identitas.
     public function index(Request $request): View
     {
-        $search = $request->search;
+        $search = trim((string) $request->search);
         $role = $request->role;
 
         $users = User::query()
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('username', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                $query->where(function ($searchQuery) use ($search) {
+                    $searchQuery->where('name', 'like', "%{$search}%")
+                        ->orWhere('username', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
             })
             ->when($role, function ($query) use ($role) {
                 $query->where('role', $role);
@@ -39,6 +42,7 @@ class UserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        // Admin membuat akun internal; tidak ada register publik untuk kasir.
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:50', 'alpha_dash:ascii', 'unique:users,username'],
@@ -67,6 +71,7 @@ class UserController extends Controller
 
     public function update(Request $request, User $user): RedirectResponse
     {
+        // Username dan email tetap unik, kecuali milik user yang sedang diedit.
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'username' => [
@@ -94,6 +99,7 @@ class UserController extends Controller
         ];
 
         if (! empty($validated['password'])) {
+            // Password hanya diganti saat field diisi.
             $data['password'] = Hash::make($validated['password']);
         }
 
@@ -106,6 +112,7 @@ class UserController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
+        // Akun aktif tidak boleh menghapus dirinya sendiri.
         if ($user->id === auth()->id()) {
             return redirect()
                 ->route('users.index')
@@ -114,6 +121,7 @@ class UserController extends Controller
 
         $adminCount = User::where('role', 'admin')->count();
 
+        // Minimal satu admin harus tersisa untuk mengelola sistem.
         if ($user->role === 'admin' && $adminCount <= 1) {
             return redirect()
                 ->route('users.index')

@@ -15,11 +15,13 @@ class PurchaseInvoice extends Model
         'note',
     ];
 
+    // Faktur pembelian dicatat oleh admin yang menginput stok masuk.
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    // Item faktur menyimpan daftar produk yang menambah stok.
     public function items()
     {
         return $this->hasMany(PurchaseItem::class);

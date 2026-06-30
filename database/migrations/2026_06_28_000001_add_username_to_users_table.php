@@ -11,9 +11,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            // Username menjadi opsi login selain email.
             $table->string('username', 50)->nullable()->unique()->after('name');
         });
 
+        // Isi username untuk user lama agar constraint unik tetap aman.
         DB::table('users')
             ->orderBy('id')
             ->get(['id', 'email', 'name'])

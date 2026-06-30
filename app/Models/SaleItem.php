@@ -14,11 +14,13 @@ class SaleItem extends Model
         'subtotal',
     ];
 
+    // Baris item selalu terhubung ke satu transaksi penjualan.
     public function sale()
     {
         return $this->belongsTo(Sale::class);
     }
 
+    // Produk dibutuhkan untuk harga, nama, dan pelacakan stok keluar.
     public function product()
     {
         return $this->belongsTo(Product::class);

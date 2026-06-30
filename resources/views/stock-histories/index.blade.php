@@ -17,6 +17,7 @@
                         Filter Riwayat Stok
                     </h3>
 
+                    {{-- Filter audit stok berdasarkan tipe, periode, dan kata kunci --}}
                     <form method="GET" action="{{ route('stock-histories.index') }}" class="mt-4 grid grid-cols-1 md:grid-cols-5 gap-4">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700">
@@ -25,7 +26,7 @@
                             <input type="text"
                                    name="search"
                                    value="{{ $search }}"
-                                   placeholder="Kode atau nama produk..."
+                                   placeholder="Produk, kode, kategori, pengguna, sumber, atau catatan..."
                                    class="mt-1 w-full rounded-lg border-gray-300">
                         </div>
 
@@ -76,6 +77,7 @@
                 </div>
             </div>
 
+            {{-- Tabel audit semua perubahan stok --}}
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="p-6 border-b">
                     <h3 class="text-lg font-semibold text-gray-800">

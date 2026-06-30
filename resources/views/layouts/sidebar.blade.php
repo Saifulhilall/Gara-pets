@@ -1,4 +1,5 @@
 @php
+    // Daftar menu dipusatkan di sini agar role dan status aktif mudah dirawat.
     $menus = [
         [
             'label' => 'Dashboard',
@@ -57,23 +58,26 @@
     ];
 @endphp
 
-<aside class="w-60 min-h-screen bg-white border-r border-gray-200"><div class="p-6 border-b">
-    <div class="flex items-center gap-3">
-        <img src="{{ asset('images/logo-gpets.jpeg') }}"
-             alt="Logo G-Pets Gara PetShop"
-             class="w-12 h-12 object-contain rounded-lg bg-white border">
+<aside class="w-60 min-h-screen bg-white border-r border-gray-200">
+    {{-- Identitas aplikasi dan role pengguna --}}
+    <div class="h-24 px-6 border-b flex items-center">
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('images/logo-gpets.jpeg') }}"
+                 alt="Logo G-Pets Gara PetShop"
+                 class="h-12 w-12 shrink-0 object-contain rounded-lg bg-white border border-gray-200">
 
-        <div>
-            <h1 class="text-lg font-bold text-gray-800 leading-tight">
-                G-Pets POS
-            </h1>
-            <p class="text-sm text-gray-500 mt-1 capitalize">
-                {{ Auth::user()->role }}
-            </p>
+            <div class="min-w-0 leading-none">
+                <h1 class="text-lg font-bold text-gray-800 leading-5">
+                    G-Pets POS
+                </h1>
+                <p class="mt-1 text-sm text-gray-500 capitalize leading-4">
+                    {{ Auth::user()->role }}
+                </p>
+            </div>
         </div>
     </div>
-</div>
 
+    {{-- Navigasi disaring berdasarkan role user login --}}
     <nav class="p-4 space-y-1">
         @foreach ($menus as $menu)
             @if (in_array(Auth::user()->role, $menu['roles']))
@@ -88,6 +92,7 @@
         @endforeach
     </nav>
 
+    {{-- Info akun dan aksi logout --}}
     <div class="p-4 border-t">
         <div class="mb-3">
             <p class="text-sm font-medium text-gray-800">

@@ -17,10 +17,12 @@
 
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 flex">
+            {{-- Sidebar utama berisi navigasi berdasarkan role --}}
             @include('layouts.sidebar')
 
             <div class="flex-1 min-w-0">
                 @isset($header)
+                    {{-- Header halaman dari masing-masing view --}}
                     <header class="bg-white shadow">
                         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                             {{ $header }}
@@ -37,6 +39,7 @@
         <x-confirm-modal />
 
         <script>
+            // Tutup alert tanpa reload halaman.
             document.addEventListener('click', function (event) {
                 const closeButton = event.target.closest('[data-dismiss-alert]');
 
@@ -54,6 +57,7 @@
                 let pendingForm = null;
                 let pendingSubmitter = null;
 
+                // Reset state modal setelah aksi dibatalkan atau selesai.
                 function closeModal() {
                     modal.classList.add('hidden');
                     modal.classList.remove('flex');
@@ -62,6 +66,7 @@
                     pendingSubmitter = null;
                 }
 
+                // Isi konten modal dari atribut data-confirm pada form.
                 function openModal(form, submitter) {
                     const variant = form.dataset.confirmVariant || 'danger';
                     const danger = variant === 'danger';
@@ -115,6 +120,7 @@
                     }
                 });
 
+                // Ubah tombol submit menjadi loading agar tidak diklik berulang.
                 document.querySelectorAll('form[data-loading]').forEach(function (form) {
                     form.addEventListener('submit', function (event) {
                         const button = event.submitter || form.querySelector('button[type="submit"]');

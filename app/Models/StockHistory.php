@@ -18,11 +18,13 @@ class StockHistory extends Model
         'note',
     ];
 
+    // Riwayat stok selalu mengarah ke produk yang berubah.
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
+    // User menunjukkan siapa yang memicu perubahan stok.
     public function user()
     {
         return $this->belongsTo(User::class);

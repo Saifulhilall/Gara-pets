@@ -11,7 +11,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
+// Route untuk tamu: login dan pemulihan password.
 Route::middleware('guest')->group(function () {
+// Register publik dinonaktifkan karena akun dibuat oleh admin.
 //     Route::get('register', [RegisteredUserController::class, 'create'])
 //         ->name('register');
 
@@ -35,6 +37,7 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
+// Route autentikasi bawaan untuk user yang sudah login.
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');

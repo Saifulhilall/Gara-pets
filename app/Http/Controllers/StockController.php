@@ -11,15 +11,23 @@ use Illuminate\View\View;
 
 class StockController extends Controller
 {
+    // Menampilkan stok produk dengan pencarian dan filter status stok.
     public function index(Request $request): View
     {
-        $search = $request->search;
+        $search = trim((string) $request->search);
         $status = $request->status;
 
         $products = Product::with('category')
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('code', 'like', "%{$search}%");
+                // Pencarian stok mengikuti data produk dan kategori.
+                $query->where(function ($searchQuery) use ($search) {
+                    $searchQuery->where('name', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%")
+                        ->orWhere('unit', 'like', "%{$search}%")
+                        ->orWhereHas('category', function ($categoryQuery) use ($search) {
+                            $categoryQuery->where('name', 'like', "%{$search}%");
+                        });
+                });
             })
             ->when($status === 'low', function ($query) {
                 $query->whereColumn('stock', '<=', 'minimum_stock');
@@ -36,11 +44,13 @@ class StockController extends Controller
 
     public function adjust(Request $request, Product $product): RedirectResponse
     {
+        // Penyesuaian manual wajib menyertakan catatan agar mudah diaudit.
         $validated = $request->validate([
             'stock' => ['required', 'integer', 'min:0'],
             'note' => ['required', 'string', 'max:500'],
         ]);
 
+        // Update stok dan histori penyesuaian harus berhasil bersama.
         DB::transaction(function () use ($validated, $product) {
             $product = Product::where('id', $product->id)->lockForUpdate()->first();
 

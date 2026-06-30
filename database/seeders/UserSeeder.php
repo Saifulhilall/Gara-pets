@@ -10,6 +10,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        // Akun admin awal untuk mengelola master data dan laporan.
         User::create([
             'name' => 'Admin Gara Petshop',
             'username' => 'admin',
@@ -18,6 +19,7 @@ class UserSeeder extends Seeder
             'role' => 'admin',
         ]);
 
+        // Akun kasir awal untuk simulasi transaksi penjualan.
         User::create([
             'name' => 'Kasir Gara Petshop',
             'username' => 'kasir',

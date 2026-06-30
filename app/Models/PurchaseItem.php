@@ -14,11 +14,13 @@ class PurchaseItem extends Model
         'subtotal',
     ];
 
+    // Baris item selalu terhubung ke satu faktur pembelian.
     public function purchaseInvoice()
     {
         return $this->belongsTo(PurchaseInvoice::class);
     }
 
+    // Produk dipakai untuk update stok dan harga beli terbaru.
     public function product()
     {
         return $this->belongsTo(Product::class);

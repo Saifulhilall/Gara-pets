@@ -11,6 +11,7 @@
                 <x-alert />
             </div>
 
+            {{-- Ringkasan laporan dihitung dari seluruh hasil filter --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white p-5 rounded-lg shadow-sm">
                     <p class="text-sm text-gray-500">Total Transaksi</p>
@@ -40,6 +41,7 @@
                         Filter Laporan Penjualan
                     </h3>
 
+                    {{-- Filter laporan penjualan berdasarkan periode dan kata kunci --}}
                     <form method="GET" action="{{ route('reports.sales') }}" class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700">
@@ -48,7 +50,7 @@
                             <input type="text"
                                    name="search"
                                    value="{{ $search }}"
-                                   placeholder="Kode transaksi atau nama kasir..."
+                                   placeholder="Kode transaksi, kasir, produk, atau catatan..."
                                    class="mt-1 w-full rounded-lg border-gray-300">
                         </div>
 
@@ -87,6 +89,7 @@
                 </div>
             </div>
 
+            {{-- Tabel transaksi yang masuk hasil laporan --}}
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="p-6 border-b">
                     <h3 class="text-lg font-semibold text-gray-800">

@@ -14,17 +14,28 @@ use Illuminate\View\View;
 
 class SaleController extends Controller
 {
+    // Menampilkan riwayat penjualan dengan filter tanggal dan kata kunci.
     public function index(Request $request): View
     {
-        $search = $request->search;
+        $search = trim((string) $request->search);
         $startDate = $request->start_date;
         $endDate = $request->end_date;
 
         $sales = Sale::with(['user', 'items.product'])
             ->when($search, function ($query) use ($search) {
-                $query->where('transaction_code', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery->where('name', 'like', "%{$search}%");
+                // Pencarian mencakup kode transaksi, kasir, catatan, dan produk.
+                $query->where(function ($searchQuery) use ($search) {
+                    $searchQuery->where('transaction_code', 'like', "%{$search}%")
+                        ->orWhere('note', 'like', "%{$search}%")
+                        ->orWhereHas('user', function ($userQuery) use ($search) {
+                            $userQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('username', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('items.product', function ($productQuery) use ($search) {
+                            $productQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('code', 'like', "%{$search}%");
+                        });
                     });
             })
             ->when($startDate, function ($query) use ($startDate) {
@@ -42,6 +53,7 @@ class SaleController extends Controller
 
     public function create(): View
     {
+        // Produk dipakai sebagai pilihan item pada form transaksi.
         $products = Product::orderBy('name')->get();
 
         return view('sales.create', compact('products'));
@@ -49,6 +61,7 @@ class SaleController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        // Validasi memastikan baris produk, jumlah, dan pembayaran siap diproses.
         $validated = $request->validate([
             'product_id' => ['required', 'array', 'min:1'],
             'product_id.*' => ['required', 'exists:products,id'],
@@ -58,23 +71,17 @@ class SaleController extends Controller
             'note' => ['nullable', 'string'],
         ]);
 
-        $validated = $request->validate([
-            'product_id' => ['required', 'array', 'min:1'],
-            'product_id.*' => ['required', 'exists:products,id'],
-            'quantity' => ['required', 'array', 'min:1'],
-            'quantity.*' => ['required', 'integer', 'min:1'],
-            'paid_amount' => ['required', 'numeric', 'min:0'],
-            'note' => ['nullable', 'string'],
-        ]);
-
+        // Semua perubahan stok dan detail transaksi dibungkus agar tetap sinkron.
         DB::transaction(function () use ($validated, $request) {
             $totalAmount = 0;
             $items = [];
 
             foreach ($validated['product_id'] as $index => $productId) {
+                // Lock produk saat transaksi untuk mencegah stok berubah bersamaan.
                 $product = Product::where('id', $productId)->lockForUpdate()->first();
                 $quantity = (int) $validated['quantity'][$index];
 
+                // Cegah transaksi jika jumlah jual melebihi stok tersedia.
                 if ($product->stock < $quantity) {
                     throw ValidationException::withMessages([
                         'quantity' => "Stok produk {$product->name} tidak mencukupi. Stok tersedia: {$product->stock}.",
@@ -125,6 +132,7 @@ class SaleController extends Controller
                     'stock' => $stockAfter,
                 ]);
 
+                // Setiap stok keluar disimpan ke riwayat untuk audit barang.
                 StockHistory::create([
                     'product_id' => $product->id,
                     'user_id' => auth()->id(),
@@ -146,6 +154,7 @@ class SaleController extends Controller
 
     public function show(Sale $sale): View
     {
+        // Detail transaksi memuat kasir, item, produk, dan kategori.
         $sale->load(['user', 'items.product.category']);
 
         return view('sales.show', compact('sale'));
@@ -153,6 +162,7 @@ class SaleController extends Controller
 
     private function generateTransactionCode(): string
     {
+        // Kode transaksi menggabungkan waktu dan user agar mudah ditelusuri.
         return 'TRX-' . now()->format('YmdHis') . '-' . auth()->id();
     }
 }

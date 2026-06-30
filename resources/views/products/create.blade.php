@@ -13,6 +13,7 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-sm p-6">
+                {{-- Form master produk baru, termasuk stok awal --}}
                 <form method="POST" action="{{ route('products.store') }}" class="space-y-5" data-loading data-loading-text="Menyimpan...">
                     @csrf
 

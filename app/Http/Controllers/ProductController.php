@@ -13,20 +13,56 @@ use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    // Menampilkan daftar produk dengan pencarian dan pengurutan tabel.
     public function index(Request $request): View
     {
-        $search = $request->search;
+        $search = trim((string) $request->search);
+        // Whitelist kolom sorting agar query tetap aman dari input bebas.
+        $allowedSorts = [
+            'code',
+            'name',
+            'category',
+            'purchase_price',
+            'selling_price',
+            'stock',
+            'status',
+        ];
+        $sort = in_array($request->query('sort'), $allowedSorts, true)
+            ? $request->query('sort')
+            : 'latest';
+        $direction = $request->query('direction') === 'asc' ? 'asc' : 'desc';
 
-        $products = Product::with('category')
+        $productsQuery = Product::with('category')
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('code', 'like', "%{$search}%");
-            })
-            ->latest()
+                // Pencarian dikelompokkan agar tidak mengganggu filter lain.
+                $query->where(function ($searchQuery) use ($search) {
+                    $searchQuery->where('name', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%")
+                        ->orWhere('unit', 'like', "%{$search}%")
+                        ->orWhereHas('category', function ($categoryQuery) use ($search) {
+                            $categoryQuery->where('name', 'like', "%{$search}%");
+                        });
+                });
+            });
+
+        // Kolom relasi dan status stok butuh aturan pengurutan khusus.
+        match ($sort) {
+            'category' => $productsQuery->orderBy(
+                Category::select('name')
+                    ->whereColumn('categories.id', 'products.category_id')
+                    ->limit(1),
+                $direction
+            ),
+            'status' => $productsQuery->orderByRaw('(stock <= minimum_stock) '.$direction),
+            'latest' => $productsQuery->latest(),
+            default => $productsQuery->orderBy($sort, $direction),
+        };
+
+        $products = $productsQuery
             ->paginate(10)
             ->withQueryString();
 
-        return view('products.index', compact('products', 'search'));
+        return view('products.index', compact('products', 'search', 'sort', 'direction'));
     }
 
     public function create(): View
@@ -40,6 +76,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate($this->validationRules());
 
+        // Stok awal produk langsung dicatat sebagai riwayat penyesuaian.
         DB::transaction(function () use ($validated) {
             $product = Product::create($validated);
 
@@ -74,6 +111,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate($this->validationRules($product));
 
+        // Perubahan data produk dan riwayat stok disimpan dalam satu transaksi.
         DB::transaction(function () use ($validated, $product) {
             $stockBefore = $product->stock;
 
@@ -103,6 +141,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
+        // Produk yang sudah dipakai transaksi tidak boleh dihapus agar histori tetap utuh.
         if ($product->saleItems()->exists() || $product->purchaseItems()->exists()) {
             return redirect()
                 ->route('products.index')

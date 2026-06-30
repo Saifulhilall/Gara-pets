@@ -17,7 +17,9 @@
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen bg-gray-100 px-4 py-8 sm:flex sm:items-center sm:justify-center">
+            {{-- Card autentikasi agar login terasa satu gaya dengan dashboard POS --}}
             <div class="w-full max-w-md rounded-xl bg-white px-6 py-8 shadow-sm sm:px-8">
+                {{-- Identitas aplikasi pada halaman guest --}}
                 <div class="mb-7 text-center">
                     <img src="{{ asset('images/logo-gpets.jpeg') }}"
                          alt="Logo G-Pets Gara PetShop"
@@ -38,6 +40,7 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+                // Cegah submit ganda pada form autentikasi.
                 document.querySelectorAll('form[data-loading]').forEach(function (form) {
                     form.addEventListener('submit', function (event) {
                         const button = event.submitter || form.querySelector('button[type="submit"]');

@@ -13,6 +13,7 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-sm p-6">
+                {{-- Form edit akun; password opsional jika tidak ingin diganti --}}
                 <form method="POST" action="{{ route('users.update', $user) }}" class="space-y-5" data-loading data-loading-text="Memperbarui...">
                     @csrf
                     @method('PUT')

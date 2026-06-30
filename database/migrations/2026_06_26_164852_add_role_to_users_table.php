@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
         {
             Schema::table('users', function (Blueprint $table) {
+                // Role dipakai middleware untuk membedakan akses admin dan kasir.
                 $table->enum('role', ['admin', 'kasir'])->default('kasir')->after('password');
             });
         }

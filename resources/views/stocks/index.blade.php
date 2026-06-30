@@ -18,6 +18,7 @@
                         Filter Stok Barang
                     </h3>
 
+                    {{-- Filter stok berdasarkan produk dan status aman/rendah --}}
                     <form method="GET" action="{{ route('stocks.index') }}" class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700">
@@ -26,7 +27,7 @@
                             <input type="text"
                                    name="search"
                                    value="{{ $search }}"
-                                   placeholder="Kode atau nama produk..."
+                                   placeholder="Kode, nama, kategori, atau satuan produk..."
                                    class="mt-1 w-full rounded-lg border-gray-300">
                         </div>
 
@@ -56,6 +57,7 @@
                 </div>
             </div>
 
+            {{-- Tabel stok sekaligus form penyesuaian manual --}}
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="p-6 border-b">
                     <h3 class="text-lg font-semibold text-gray-800">

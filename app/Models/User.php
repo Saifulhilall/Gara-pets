@@ -18,6 +18,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    // Role menentukan akses admin dan kasir melalui middleware.
     protected $fillable = [
         'name',
         'username',
